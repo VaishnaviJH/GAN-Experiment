@@ -9,10 +9,13 @@ class GANModules():
         # Number of filters in the first layer of G and D
         self.input_generator_filter = 64
         self.input_discriminator_filter = 64
+
+        #image configuartions
         self.img_dimensions = img_dimensions
         self.channels = channels
         self.input_latent_dimension = input_latent_dimension
 
+    #Pixel to pixel image generator model
     def p2p_generator(self):
         def conv2d(input, filters, boolbn=True, filter_size=4):
             d_i = Conv2D(filters, kernel_size=filter_size, strides=2, padding='same')(input)
@@ -55,10 +58,10 @@ class GANModules():
 
         return Model(d0, output_img)
 
+    # Pixel to pixel image discriminator model
     def p2p_discriminator(self):
 
         def d_layer(layer_input, filters, boolbn=True, filter_size=4):
-            """Discriminator layer"""
             d_i = Conv2D(filters, kernel_size=filter_size, strides=2, padding='same')(layer_input)
             d_i = LeakyReLU(alpha=0.2)(d_i)
             if boolbn:
@@ -68,7 +71,7 @@ class GANModules():
         GroundTruthImg = Input(shape=self.img_dimensions)
         ConditionalImg = Input(shape=self.img_dimensions)
 
-        # Concatenate image and conditioning image by channels to produce input
+        # Concatenate generated fake image and conditioning image
         concatenate_imgs = Concatenate(axis=-1)([GroundTruthImg, ConditionalImg])
 
         d1 = d_layer(concatenate_imgs, self.input_discriminator_filter, boolbn=False)
@@ -80,6 +83,7 @@ class GANModules():
 
         return Model([GroundTruthImg, ConditionalImg], validity)
 
+    # Deep convolution image generator model
     def dc_generator(self):
 
         model = Sequential()
@@ -104,6 +108,7 @@ class GANModules():
 
         return Model(noise, img)
 
+    # Deep convolution image discriminator model
     def dc_discriminator(self):
 
         model = Sequential()

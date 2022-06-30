@@ -8,12 +8,15 @@ class ImageGenerator():
         self.GAN_type = GAN_type
         self.dataset_path = dataset_path
         self.img_dimensions = img_dimensions
-    def generate_batch_images(self, batch_size=1, is_testing=False):
 
+    def generate_batch_images(self, batch_size=1, is_testing=False):
+        #load all the image lists
         image_files = os.listdir(os.path.join(self.dataset_path, "train" if not is_testing else "val"))
 
+        #compute the batch size
         self.n_batches = int(len(image_files) / batch_size)
 
+        #Divide the input image and assign as groundtruth and conditional
         for i in range(self.n_batches-1):
             batch = image_files[i*batch_size:(i+1)*batch_size]
             list_groundtruth_img, list_condition_img = [], []
@@ -23,7 +26,6 @@ class ImageGenerator():
                 half_width = int(w/2)
                 groundtruth_img = img[:, :half_width, :]
                 condition_img = img[:, half_width:, :]
-
                 groundtruth_img = cv2.resize(groundtruth_img, self.img_dimensions)
                 condition_img = cv2.resize(condition_img, self.img_dimensions)
 
@@ -37,18 +39,22 @@ class ImageGenerator():
             list_groundtruth_img = np.array(list_groundtruth_img)/127.5 - 1.
             list_condition_img = np.array(list_condition_img)/127.5 - 1.
 
+            #check the GAN type and return the input required
             if (self.GAN_type == "P2P"):
                 yield list_groundtruth_img, list_condition_img
             else:
                 yield list_groundtruth_img
 
     def generate_img_data(self, batch_size = 1, is_testing = False, ):
+        # load all the image lists
         image_files = os.listdir(os.path.join(self.dataset_path, "train" if not is_testing else "test"))
-
         list_groundtruth_img = []
         list_condition_img = []
 
+        #select randomly from the batch
         batch_images = np.random.choice(image_files, size=batch_size)
+
+        # Divide the input image and assign as groundtruth and conditional
         for img_name in batch_images:
             img = self.imread(os.path.join(self.dataset_path, "train" if not is_testing else "test", img_name))
             h, w, _ = img.shape
@@ -68,11 +74,12 @@ class ImageGenerator():
         list_groundtruth_img = np.array(list_groundtruth_img)/127.5 - 1.
         list_condition_img = np.array(list_condition_img)/127.5 - 1.
 
+        # check the GAN type and return the input required
         if(self.GAN_type == "P2P"):
             return list_groundtruth_img, list_condition_img
         else:
             return(list_groundtruth_img)
 
-
+    #read the input image in RGB mode
     def imread(self, path):
         return imageio.imread(path, pilmode="RGB").astype(np.float)
