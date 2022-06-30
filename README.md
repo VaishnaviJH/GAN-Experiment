@@ -7,7 +7,7 @@ Example usage is shown below.<br />
 **Note:** Downloaded the dataset from http://efrosgans.eecs.berkeley.edu/pix2pix/datasets/
 
 ### Pix2Pix GAN:
-python pix2pixgan.py --loadweights True --modelpath "Path to saved model" --dataset_path "Path to the dataset" 
+python pix2pix_gan.py --loadweights True --modelpath "Path to saved model" --dataset_path "Path to the dataset" 
 
 ### Deep Convolutional GAN
 python deep_convolutional_gan.py --loadweights True --modelpath "Path to saved model" --dataset_path "Path to the dataset"
@@ -32,7 +32,7 @@ python deep_convolutional_gan.py --loadweights True --modelpath "Path to saved m
 ## Observations:
 The conditional pixel to pixel GAN was able to predict the outline, texture and colour at the early stage of training since we are giving the map as a conditional input. But the Deep Convolutional GAN couldn't predict the scenary becauase it is complex for the model to understand the input structure and takes a lot of time to train. Hence Conditional pixel to pixel GAN works better than the DC GAN.
 
-**Note: Beacause of the shortage of the time and resource I was able to train only 30 epochs.** 
+**Note: Because of the shortage of the time and resource I was able to train only 30 epochs.** 
 
 
 
