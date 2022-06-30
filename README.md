@@ -29,6 +29,11 @@ python deep_convolutional_gan.py --loadweights True --modelpath "Path to saved m
 ![outputat40](https://user-images.githubusercontent.com/20317408/176629614-7993e387-ffda-4ce2-b0c6-5f42e3aa2e8e.png)
 ![outputat0](https://user-images.githubusercontent.com/20317408/176629665-a589db76-6df8-4f9f-9a89-7bf29fd5bb90.png)
 
+## Observations:
+The conditional pixel to pixel GAN was able to predict the outline, texture and colour at the early stage of training since we are giving the map as a conditional input. But the Deep Convolutional GAN couldn't predict the scenary becauase it is complex for the model to understand the input structure and takes a lot of time to train. Hence Conditional pixel to pixel GAN works better than the DC GAN.
+
+**Note: Beacause of the shortage of the time and resource I was able to train only 30 epochs.** 
+
 
 
 
