@@ -38,17 +38,15 @@ class DCGAN():
         self.discriminator.compile(loss='binary_crossentropy',optimizer=optimizer,metrics=['accuracy'])
 
         # The generator takes noise as input and generates imgs
-        z = Input(shape=(self.input_latent_dimension,))
-        img = self.generator(z)
-
-
-        self.discriminator.trainable = False
+        z_input = Input(shape=(self.input_latent_dimension,))
+        generated_img = self.generator(z_input)
 
         # The discriminator takes generated images as input and determines validity
-        valid = self.discriminator(img)
+        self.discriminator.trainable = False
+        valid = self.discriminator(generated_img)
 
         # Trains the generator to fool the discriminator
-        self.combined = Model(z, valid)
+        self.combined = Model(z_input, valid)
         self.combined.compile(loss='binary_crossentropy', optimizer=optimizer)
         if (pre_load_weights):
             self.combined.load_weights(self.model_path)
@@ -116,4 +114,4 @@ if __name__ == '__main__':
 
     # Process and train the GAN model
     dcgan = DCGAN(pre_load_weights, model_path, dataset_path)
-    dcgan.train(epochs=400, batch_size=5, save_interval=50)
+    dcgan.train(epochs=400, batch_size=1, save_interval=50)
